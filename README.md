@@ -1,0 +1,11 @@
+# What are we making?
+- Minimal Html/JS site
+- That has the following buttons which map to the solidity smart contract:
+- Connect Wallet
+    - Button to buy coffee 
+    - Call a function on a smart contract
+    - Have a test blockchain that we can call
+- Buy Coffee
+- Get Balance 
+- Withdraw
+- Upgrading to typescript# html-ts-coffee-cu
