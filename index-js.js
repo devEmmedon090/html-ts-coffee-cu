@@ -6,9 +6,11 @@ const fundButton = document.getElementById('fundButton');
 const ethAmountInput = document.getElementById('ethAmount');
 const balanceButton = document.getElementById('balanceButton');
 const withdrawButton = document.getElementById('withdrawButton');
+const checkingFundingAmount = document.getElementById('checkingFundingAmount');
 
 let walletClient;
 let publicClient;
+let FundMe;
 
 async function connect() {
     if (typeof window.ethereum !== 'undefined') {
@@ -120,7 +122,35 @@ async function getBalance(){
         console.log(`Contract balance: ${formatEther(balance)} ETH`);
 }}
 
+async function check() {
+    console.log('Checking funding amount...');
+        if (typeof window.ethereum !== 'undefined') {
+            publicClient = createPublicClient({
+                transport: custom(window.ethereum),
+            });
+            const [accounts] = await publicClient.request({
+                method: 'eth_requestAccounts',
+            });
+            console.log('User Address:', accounts);
+
+            // Calling the smart contract function
+            const fundingAmount = await publicClient.readContract({
+                address: contractAddress,
+                abi: abi,
+                functionName: 'getAddressToAmountFunded',
+                args: [accounts],
+            });
+
+            const amountInEthers = formatEther(fundingAmount);
+            console.log(`Funding amount for ${accounts}: ${amountInEthers} ETH`);
+        } else {
+            console.error("Please install MetaMask!");
+            connectButton.innerHTML = "Please install MetaMask!";
+        }
+}
+
 connectButton.onclick = connect;
 fundButton.onclick = fund;
 balanceButton.onclick = getBalance;
 withdrawButton.onclick = withdraw;
+checkingFundingAmount.onclick = check;
